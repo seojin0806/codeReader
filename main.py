@@ -7,6 +7,8 @@ llm = OpenAI(
     openai_api_key="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"
 )
 
+#수정확인
+print("헬로!")
 
 # Streamlit UI
 st.title("Code Analysis Tool")
