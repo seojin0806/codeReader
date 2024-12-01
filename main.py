@@ -26,11 +26,13 @@ if st.button("코드 분석하기"):
                 graph.node(node.name, shape="box", style="filled", color="lightblue")
                 if parent_name:
                     graph.edge(parent_name, node.name)
-                analysis_results.append(f"클래스: {node.name} - {node.name} 클래스의 역할을 정의합니다.")
+                class_analysis = llm(f"이 코드를 읽고 이 안의 {node.name} 클래스가 어떤 정의인지 한국어로 말해줘:\n\n{code_input}")
+                analysis_results.append(f"클래스: {node.name} - {class_analysis}")
                 for item in node.body:  # 클래스 내부 요소 분석
                     analyze_node(item, node.name)
             elif isinstance(node, ast.FunctionDef):  # 함수 정의일 경우
-                analysis_results.append(f"함수: {node.name} - {node.name} 함수의 역할을 수행합니다.")
+                function_analysis = llm(f"이 코드를 읽고 이 안의 {node.name} 함수가 어떤 정의인지 한국어로 말해줘:\n\n{code_input}")
+                analysis_results.append(f"함수: {node.name} - {function_analysis}")
                 graph.node(node.name, shape="ellipse", style="filled", color="lightgreen")
                 if parent_name:
                     graph.edge(parent_name, node.name)
@@ -39,8 +41,8 @@ if st.button("코드 분석하기"):
             analyze_node(node)
 
         # LangChain을 사용한 추가 분석 (한국어로 요청)
-        st.write("### 코드의 흐름 분석")
-        langchain_analysis = llm(f"다음 코드를 분석하고 요약해 주세요:\n\n{code_input[:]}")
+        st.write("### 해당 코드 요약")
+        langchain_analysis = llm(f"이 코드를 읽고 한국어로 어떤 코드인지 요약해줘:\n\n{code_input}")
         st.write(langchain_analysis)
 
         # AST 분석 결과 출력 (한국어로 제공)
