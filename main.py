@@ -3,12 +3,30 @@ import os
 import streamlit as st
 from graphviz import Digraph
 from langchain_openai import OpenAI
+from transformers import RobertaTokenizer, RobertaModel
 
 # LangChain 설정
 llm = OpenAI(
     temperature=0.2,
     openai_api_key="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"  # 유효한 OpenAI API 키 입력
 )
+
+# CodeBERT 설정
+tokenizer = RobertaTokenizer.from_pretrained("microsoft/codebert-base")
+model = RobertaModel.from_pretrained("microsoft/codebert-base")
+
+def analyze_code_with_codebert(code_snippet):
+    """CodeBERT를 사용하여 코드 임베딩 분석"""
+    inputs = tokenizer(code_snippet, return_tensors="pt", max_length=512, truncation=True, padding=True)
+    outputs = model(**inputs)
+    embeddings = outputs.last_hidden_state.mean(dim=1)  # 평균 풀링으로 임베딩 생성
+    return embeddings
+
+def combined_analysis_with_langchain_and_codebert(code_snippet):
+    """LangChain과 CodeBERT를 결합한 코드 분석"""
+    embedding = analyze_code_with_codebert(code_snippet)
+    llm_analysis = llm(f"이 코드를 분석하고 한국어로 요약해 주세요:\n\n{code_snippet}")
+    return llm_analysis + f"\n\nCodeBERT 임베딩 평균값: {embedding.mean().item():.4f}"
 
 # Streamlit UI
 st.title("코드 분석")
@@ -25,7 +43,7 @@ if st.button("코드 분석 및 다이어그램 생성"):
         analysis_results = []
 
         def analyze_class(node):
-            """클래스를 UML 형식으로 분석."""
+            """클래스를 UML 형식으로 분석"""
             class_name = node.name
             bases = [base.id for base in node.bases if isinstance(base, ast.Name)]
 
@@ -33,13 +51,15 @@ if st.button("코드 분석 및 다이어그램 생성"):
             attributes = []
             methods = []
 
-            class_analysis = llm(f"이 코드를 읽고 이 안의 {node.name} 클래스가 어떤 정의인지 한국어로 말해줘:\n\n{code_input}")
+            class_code = ast.unparse(node)
+            class_analysis = combined_analysis_with_langchain_and_codebert(class_code)
             analysis_results.append(f"클래스: {node.name} - {class_analysis}")
 
             for item in node.body:
                 if isinstance(item, ast.FunctionDef):  # 메서드
                     methods.append(item.name)
-                    method_analysis = llm(f"이 코드를 읽고 이 안의 {item.name} 메소드가 어떤 정의인지 한국어로 말해줘:\n\n{code_input}")
+                    method_code = ast.unparse(item)
+                    method_analysis = combined_analysis_with_langchain_and_codebert(method_code)
                     analysis_results.append(f"메소드: {item.name} - {method_analysis}")
                 elif isinstance(item, ast.Assign):  # 속성
                     for target in item.targets:
@@ -68,12 +88,12 @@ if st.button("코드 분석 및 다이어그램 생성"):
         for parent, child in class_relations:
             uml_graph.edge(parent, child, arrowhead="empty")
 
-        # LangChain을 사용한 코드 요약 (한국어로)
+        # LangChain과 CodeBERT를 사용한 코드 요약
         st.write("### 해당 코드 요약")
-        langchain_analysis = llm(f"이 코드를 읽고 한국어로 어떤 코드인지 요약해줘:\n\n{code_input}")
+        langchain_analysis = combined_analysis_with_langchain_and_codebert(code_input)
         st.write(langchain_analysis)
 
-        st.write("### 함수의 역할 분석")
+        st.write("### 클래스와 메서드 분석 결과")
         for result in analysis_results:
             st.write(f"- {result}")
 
@@ -87,6 +107,7 @@ if st.button("코드 분석 및 다이어그램 생성"):
             st.error("클래스 다이어그램 파일을 찾을 수 없습니다.")
     except Exception as e:
         st.error(f"코드 분석 중 오류가 발생했습니다: {e}")
+
 
 
 #streamlit run /workspaces/codeReader/main.py
