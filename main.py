@@ -25,7 +25,7 @@ def analyze_code_with_codebert(code_snippet):
 def combined_analysis_with_langchain_and_codebert(code_snippet):
     """LangChain과 CodeBERT를 결합한 코드 분석"""
     embedding = analyze_code_with_codebert(code_snippet)
-    llm_analysis = llm(f"이 코드를 분석하고 한국어로 요약해 주세요:\n\n{code_snippet}")
+    llm_analysis = llm(f"이 코드의 CodeBERT 임베딩 평균값인 {embedding.mean().item():.4f} 와 이 코드를 분석하고 한국어로 요약해 주세요:\n\n{code_snippet}")
     return llm_analysis + f"\n\nCodeBERT 임베딩 평균값: {embedding.mean().item():.4f}"
 
 # Streamlit UI
