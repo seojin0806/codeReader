@@ -11,24 +11,25 @@ llm = OpenAI(
     openai_api_key="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"  # 유효한 OpenAI API 키 입력
 )
 
-# CodeBERT 설정
+# CodeBERT 및 ChatGPT를 통한 분석 함수
 tokenizer = RobertaTokenizer.from_pretrained("microsoft/codebert-base")
 model = RobertaModel.from_pretrained("microsoft/codebert-base")
 
 def analyze_code_with_codebert(code_snippet):
-    """CodeBERT를 사용하여 코드 임베딩 분석"""
+    #CodeBERT를 사용하여 코드 임베딩 분석
     inputs = tokenizer(code_snippet, return_tensors="pt", max_length=512, truncation=True, padding=True)
     outputs = model(**inputs)
     embeddings = outputs.last_hidden_state.mean(dim=1)  # 평균 풀링으로 임베딩 생성
     return embeddings
 
 def combined_analysis_with_langchain_and_codebert(code_snippet):
-    """LangChain과 CodeBERT를 결합한 코드 분석"""
+    #LangChain과 CodeBERT를 결합한 코드 분석
     embedding = analyze_code_with_codebert(code_snippet)
     llm_analysis = llm(f"이 코드의 CodeBERT 임베딩 평균값인 {embedding.mean().item():.4f} 와 이 코드를 분석하고 한국어로 요약해 주세요:\n\n{code_snippet}")
     return llm_analysis + f"\n\nCodeBERT 임베딩 평균값: {embedding.mean().item():.4f}"
 
-# Streamlit UI
+
+#이하 Streamlit 인터페이스 및 분석
 st.title("코드 분석")
 code_input = st.text_area("분석할 코드를 여기에 붙여넣으세요:")
 
@@ -90,8 +91,8 @@ if st.button("코드 분석 및 다이어그램 생성"):
 
         # LangChain과 CodeBERT를 사용한 코드 요약
         st.write("### 해당 코드 요약")
-        langchain_analysis = combined_analysis_with_langchain_and_codebert(code_input)
-        st.write(langchain_analysis)
+        llm_analysis = llm(f"이 코드를 분석하고 한국어로 요약해 주세요:\n\n{code_input}")
+        st.write(llm_analysis)
 
         st.write("### 클래스와 메서드 분석 결과")
         for result in analysis_results:
