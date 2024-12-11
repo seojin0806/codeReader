@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 # .env 파일의 환경 변수를 로드합니다.
 load_dotenv()
+os.environ["PATH"] += os.pathsep + '/usr/local/bin'
 
 # 환경 변수에서 API 키를 읽어옵니다.
 openai_api_key = os.getenv("OPENAI_API_KEY")
