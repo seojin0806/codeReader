@@ -3,7 +3,7 @@ streamlit
 graphviz
 langchain-openai
 transformers
-torch==2.0.0
+torch>=2.0.0
 openai
 python-dotenv>=1.0.0
 pip>=24.3.1
