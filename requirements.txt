@@ -1,8 +1,9 @@
 asttokens
 streamlit
 graphviz
-langchain_openai
-openai
-torch
+langchain-openai
 transformers
-dotenv
+torch
+openai
+python-dotenv>=1.0.0
+pip>=24.3.1
