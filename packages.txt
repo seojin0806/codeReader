@@ -1,4 +1,1 @@
 graphviz
-libc6
-libstdc++6
-libgcc-s1
