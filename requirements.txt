@@ -3,6 +3,6 @@ streamlit
 graphviz
 langchain-openai
 transformers
-torch
+torch>=2.0.0
 OpenAI
 python-dotenv
