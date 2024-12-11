@@ -3,6 +3,7 @@ os
 streamlit
 graphviz
 langchain_openai
-OpenAI
+openai
+torch
 transformers
 dotenv
