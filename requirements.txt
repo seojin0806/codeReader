@@ -1,9 +1,9 @@
-asttokens 
+asttokens
 streamlit
 graphviz
 langchain-openai
-transformers
-torch
-OpenAI
+transformers==4.30.2
+torch==2.0.1+cpu -f https://download.pytorch.org/whl/torch_stable.html
+openai
 python-dotenv>=1.0.0
 pip>=24.3.1
