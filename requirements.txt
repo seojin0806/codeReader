@@ -8,4 +8,4 @@ torch>=2.0.0
 OpenAI
 python-dotenv>=1.0.0
 subprocess
---upgrade pip
+pip
