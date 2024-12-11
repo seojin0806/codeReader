@@ -1,1 +1,6 @@
+asttokens 
+streamlit
 graphviz
+langchain-openai
+transformers
+torch
