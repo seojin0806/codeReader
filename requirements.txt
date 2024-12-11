@@ -6,4 +6,3 @@ transformers==4.30.2
 torch==2.2.0
 openai
 python-dotenv>=1.0.0
-pip>=24.3.1
