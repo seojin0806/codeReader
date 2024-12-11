@@ -1,7 +1,6 @@
 asttokens 
 streamlit
-graphviz==0.20
-pygraphviz==1.7
+graphviz
 langchain-openai
 transformers
 torch>=2.0.0
