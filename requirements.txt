@@ -6,5 +6,6 @@ langchain-openai
 transformers
 torch>=2.0.0
 OpenAI
-python-dotenv>=0.20.0
+python-dotenv>=1.0.0
 subprocess
+--upgrade pip
