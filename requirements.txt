@@ -5,4 +5,4 @@ langchain-openai
 transformers
 torch
 OpenAI
-load_dotenv
+python-dotenv
