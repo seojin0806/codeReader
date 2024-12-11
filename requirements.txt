@@ -5,3 +5,4 @@ langchain-openai
 transformers
 torch
 OpenAI
+dotenv
