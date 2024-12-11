@@ -6,3 +6,4 @@ transformers
 torch>=2.0.0
 OpenAI
 python-dotenv
+subprocess
