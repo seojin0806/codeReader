@@ -5,10 +5,16 @@ from graphviz import Digraph
 from langchain_openai import OpenAI
 from transformers import RobertaTokenizer, RobertaModel
 from dotenv import load_dotenv
+import subprocess
 
 # .env 파일의 환경 변수를 로드합니다.
 load_dotenv()
-os.environ["PATH"] += os.pathsep + '/usr/local/bin'
+try:
+    subprocess.run(["apt-get", "update"], check=True)
+    subprocess.run(["apt-get", "install", "graphviz", "-y"], check=True)
+    print("Graphviz 설치 완료!")
+except subprocess.CalledProcessError as e:
+    print(f"설치 중 오류 발생: {e}")
 
 # 환경 변수에서 API 키를 읽어옵니다.
 openai_api_key = os.getenv("OPENAI_API_KEY")
