@@ -4,11 +4,24 @@ import streamlit as st
 from graphviz import Digraph
 from langchain_openai import OpenAI
 from transformers import RobertaTokenizer, RobertaModel
+from dotenv import load_dotenv
+
+# .env 파일의 환경 변수를 로드합니다.
+load_dotenv()
+
+# 환경 변수에서 API 키를 읽어옵니다.
+openai_api_key = os.getenv("OPENAI_API_KEY")
+
+# API 키가 정상적으로 불러와졌는지 확인
+if openai_api_key:
+    print("API Key loaded successfully.")
+else:
+    print("API Key not found.")
 
 # LangChain 설정
 llm = OpenAI(
     temperature=0.2,
-    openai_api_key="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"  # 유효한 OpenAI API 키 입력
+    openai_api_key=openai_api_key  # 유효한 OpenAI API 키 입력
 )
 
 # CodeBERT 및 ChatGPT를 통한 분석 함수
